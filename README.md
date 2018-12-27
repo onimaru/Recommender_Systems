@@ -60,15 +60,15 @@ Para essa construção foi utilizada a ideia de similaridade entre os filmes. Es
 
 A partir disso a métrica utilizada para determinar o sucesso das recomendações foi não usual. Definiu-se como métrica o número de filmes recomendados que se encontram dentro da lista de filmes favoritos do usuário. Os filmes favoritos foram obtidos através de um filtro com as características gênero, rating do usuário e rating médio do filme.  
 
-### 4. Conclusões
+## 4. Conclusões
 
 Vamos discutir vários aspectos do sistema de recomendação construído abordando suas falhas e possíveis melhorias.
 
-#### Objetivo principal
+### Objetivo principal
 
 O objetivo de recomendar filmes para o usuário através da entrada de seu userId foi cumprido e pode ser visto utilizando a função **recom_movie(userId)**. As sugestões são dadas na forma de cinco filmes para cada um dos três gêneros favoritos do usuário.
 
-##### Sobre as features disponíveis
+#### Sobre as features disponíveis
 
 O link sugerido para acessar o dataset leva ao dataset chamado ml-20m e neste não há informações mais específicas sobre os usuários. Há um dataset menor, ml-100k, na mesma base que possui os dados de idade, gênero, profissão e endereço (zipcode) do usuário. Caso estas informações fossem utilizadas poderíamos encontrar filmes favoritos do usuário com um algoritmo, como o NearestNeighbors, para identificar filmes favoritos e utilizá-los como referência para filmes similares.
 
@@ -78,7 +78,7 @@ Como o dataset ml-100k não foi indicado primariamente vamos assumir que não te
 
 Aqui foram usadas variáveis pouco significativas para classificar um filme. Com mais informações como o país de origem, duração, língua, protagonistas e avaliação de sites como Rotten Tomatoes e IMDB enriqueceríamos a capacidade de encontrar semelhanças entre os filmes. Estes dados podem ser encontrados com a própria base de dados do IMDB e o dataset 'links' contém o Id de cada filme para fazer esta busca.
 
-#### Métricas para ranqueamento e modelo escolhido
+### Métricas para ranqueamento e modelo escolhido
 
 Foi escolhido um modelo que considera um espaço abstrato contendo como datapoints os filmes. A semelhança entre os filmes é determinada pela proximidade dos datapoints neste espaço, chamada de similaridade na matemática. O algoritmo utilizado, NearestNeighbors, utilizou como características (features) dos datapoints o ano de lançamento, os gêneros e a avaliação média dos usuários.
 
@@ -89,6 +89,6 @@ Um sistema com avaliação do tipo "like" e "dislike" permitiria a construção 
 Há diversas outras maneiras de realizar a recomendações, por exemplo, o sistema poderia ter como "target" prever a nota que o usuário daria para o filme e recomendar os filmes de acordo com as maiores avaliações previstas. A vantagem desse sistema é a fácil verificação de performance através de métricas como RMSE, além disso poderíamos separar o dataset em train set e test set para avalição entre outras coisas a generalização, ovefitting e underfitting.
 
 
-#### Avaliação do modelo
+### Avaliação do modelo
 
 O método escolhido dificultou a avaliação do modelo por não se encaixar nos padrões mais conhecidos, foi então estabelecida uma métrica qualitativa que conta quantas das recomendações estão entre os filmes favoritos de um usuário. Comparando os resultados obtidos com recomendações feitas ao acaso o sistema construído apresentou um número de sucessos 125 maior. Outro ponto que pode ter afetado o resultado das recomendações é o método escolhido para determinar os filmes favoritos do usuário, pois há grande chance de que todos os 10 filmes tenham recebido avaliação 5, assim o critério de desempate seria apenas a avaliação média do filme.
