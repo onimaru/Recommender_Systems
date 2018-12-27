@@ -1,5 +1,5 @@
-Este projeto tem como objetivo utilizar o dataset ml-20m (MovieLens) e criar um sistema de recomendação de filmes.
-# Teste Data Science Elo7
+# Teste Data Science Elo7: Este projeto foi proposto pela empresa Elo7 como requisito para o preenchimento de um cargo de Data Scientist.  
+
 # Sistema de recomendação com o dataset Movie Lens
 
 1.  Sistemas de recomendação: Leitura de artigos sobre sistemas de recomendação
