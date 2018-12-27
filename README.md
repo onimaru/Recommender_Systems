@@ -1,4 +1,94 @@
-# Teste_Elo7
-Recommender system for the MovieLens ml-20m dataset
-
 Este projeto tem como objetivo utilizar o dataset ml-20m (MovieLens) e criar um sistema de recomendação de filmes.
+# Teste Data Science Elo7
+# Sistema de recomendação com o dataset Movie Lens
+
+1.  Sistemas de recomendação: Leitura de artigos sobre sistemas de recomendação
+    -  O caso Netflix
+    -  Sistema user-based ou  item-based
+2. Conhecendo os dados - Movie Lens
+3. Estrutura do problema
+    -  Similaridade
+4. Conclusões
+    -  Objetivo principal
+    -  Sobre as features disponíveis
+    -  Métricas para ranqueamento e o modelo escolhido
+    -  Avaliação do modelo  
+
+## 1. Breve abordagem ao sistema de recomendação do Netflix
+
+### O caso Netflix
+As duas postagens sobre o sistema de recomendação do Netflix apresentam boas táticas que podem ser usadas em sistemas de recomendação de modo geral, embora o sistema atual não seja mais baseado nas "cinco estrelas", as postagens são de 2012. A ideia mais óbvia e básica desse sistema é simplesmente recomendar ao usuário filmes com alto *score*. Entretanto, tal método não teria muito sucesso devido a complexidade dos dados e do comportamento dos usuários. Alguns pontos específicos que o sistema de recomendação do Netflix utiliza, ou utilizava em 2012 são abordados a seguir:  
+-  Usuário variado: uma mesma conta pode ser compartilhada por uma família, portanto não se pode considerar que todas as sugestões são para uma pessoa. Poderia inicialmente ser identificado quantos usuários utilizam a conta, baseado na dispersão das avaliações dos mesmos, e então um pequeno número de sugestões simultâneas (uma linha na interface do Netflix) deveria atingir cada um destes usuários.
+-  Confiança do usuário: mostrar para o usuário que a recomendação é personalizada faz com que ele ganhe confiança em futuras recomendações. Isso mostra como uma análise cognitiva do problema pode ser mais eficiente do que um algoritmo complexo ou um grande conjunto de dados. Usualmente isso é feito com recomendações acompanhadas de: "Como você viu X talvez goste de Y, Z, ..."; ou "Recomendações para NomeDeUsuario". A personalização gera um sentimento de importância e unicidade ao usuário que consequentemente gera confiança na marca ou produto.
+-  Círculo social: há estudos sobre cognição que mostram que o ser humano muda de ideia ou aceita algo novo com maior facilidade quando pessoas conhecidas ou queridas são as responsáveis de alguma forma pela sugestão [[Por que você gosta do que você gosta | Nerdologia](https://www.youtube.com/watch?v=MmL_CUGtGTg), [Behave: The Biology of Humans at Our Best and Worst, Robert Sapolsky](https://www.amazon.com.br/gp/product/B01IAUGC5S/ref=as_li_qf_sp_asin_il_tl?ie=UTF8&tag=oatila-20&camp=1789&creative=9325&linkCode=as2&creativeASIN=B01IAUGC5S&linkId=f8355682581f4cd217c8f0b931d83913) e [Talvez Você Também Goste, Tom Vandebilt](https://www.amazon.com.br/gp/product/8547000283/ref=as_li_qf_sp_asin_il_tl?ie=UTF8&tag=oatila-20&camp=1789&creative=9325&linkCode=as2&creativeASIN=8547000283&linkId=ce3a48a431e29132c23c8df9c8020042)]. Assim também é comum utilizar em uma recomendação algo que já foi avaliado positivamente por um conhecido ou até mesmo outro usuário com perfil similar. Novamente para ganhar confiança é comum mostrar a foto, com ou sem o nome, do "usuário que indica".
+-  Gênero: a sugestão pode também ser feita por gênero e subgênero (ou palavras-chave) utilizando o *score* como critério de ordenamento. Este seria um método mais direto sem uma abordagem psicológica do usuário.
+-  Similaridade: baseado em uma série de critérios como palavras-chave, gênero, ator, diretor, etc. pode-se agrupar filmes em clusters e então fazer sugestões de um grupo que tem similaridade com filmes avaliados pelo usuário. Uma abordagem com um modelo linear poderia utilizar a correlação entre os critérios.
+-  Outros: há ainda várias possibilidades de abordagem ou de classificação das sugestões como a popularidade, o interesse visto nas procuras, o contexto ou mesmo a atualidade de um item.
+
+O ranqueamento de um sistema pode então utilizar alguns ou todos os métodos citados em um único sistema mais complexo com o objetivo de apresentar as sugestões que serão mais apreciadas pelo usuário. O Netflix utiliza vários modelos apresentando as sugestões nas diferentes linhas mostradas na sua interface. Com o passar do tempo a empresa vem adaptando, melhorando ou adicionando novos modelos se tornando referência na área de sistemas de recomendação.
+
+### Sistema user-based ou  item-based
+
+A classificação básica de um sistema de recomendação é dada em duas categorias:
+-  user-based: este tipo de sistema é aquele que busca similaridades entre usuários para fazer ma sugestão. Ex: O usuário A gosta de Star Wars e Star Trek; o usuário B gosta de Star Trek então Star Wars seria uma boa sugestão para B e a similaridade entre A e B é dada pelo gosto mútuo por Star Trek.
+-  item-based: é o sistema que considera alguma característica do item para fazer a sugestão. Ex: se em um conjunto de filmes de ação Duro de Matar é o que mais gera "plays" quando sugerido ele pode ser uma boa sugestão para quem procura um filme de ação.
+
+Ambas categorias possuem características positivas e negativas que variam muito com a aplicação, dados disponíveis e modelo escolhido. Aparentemente (é uma opinião minha) hoje em dia o Netflix usa uma combinação desses sistemas, mas o seu sucesso se deve principalmente devido a personalização do sistema, ou seja, o foco é maior em user-based.  
+
+## 2. Conhecendo os dados - Movie Lens
+
+Antes de definir um modelo ou uma estratégia devemos entender que informação possuímos no dataset fornecido, Movie Lens. Após uma análise do seu conteúdo, apenas os datasets "movies" e "ratings" foram utilizados. Destes foram retiradas informações em uma etapa de feature engineering com o objetivo principal de extrair características que pudessem ser utilizadas para encontrar similaridade entre os filmes.
+
+Com os dados obtidos procuramos responder algumas questões pertinentes:
+
+-  Como as avaliações são distribuídas?
+-  Quantas avaliações em média tem um filme?
+-  Qual o número de vezes mínimo significativo que um filme foi avaliado?
+-  Existe alguma relação entre o gênero do filme e o padrão de avaliação dos usuários?  
+-  Existe correlação entre os gêneros de filme?
+-  O ano de lançamento do filme influencia na avaliação?
+-  A hora do dia influencia na avaliação que o usuário dá para um filme?
+-  Existe correlação entre variedade de gênero de um filme e sua avaliação?  
+
+## 3. Estrutura do problema
+
+Vendo o exemplo do Netflix e os dados disponíveis optou-se por criar um sistema que identifica os três gêneros de filmes favoritos de um usuário informado e em cada um destes recomenda uma lista de cinco filmes.
+
+### Similaridade
+
+Para essa construção foi utilizada a ideia de similaridade entre os filmes. Esta foi obtida através do algoritmo de treino não-supervisionado NearestNeighbors da biblioteca scikit-learn.
+
+A partir disso a métrica utilizada para determinar o sucesso das recomendações foi não usual. Definiu-se como métrica o número de filmes recomendados que se encontram dentro da lista de filmes favoritos do usuário. Os filmes favoritos foram obtidos através de um filtro com as características gênero, rating do usuário e rating médio do filme.  
+
+### 4. Conclusões
+
+Vamos discutir vários aspectos do sistema de recomendação construído abordando suas falhas e possíveis melhorias.
+
+#### Objetivo principal
+
+O objetivo de recomendar filmes para o usuário através da entrada de seu userId foi cumprido e pode ser visto utilizando a função **recom_movie(userId)**. As sugestões são dadas na forma de cinco filmes para cada um dos três gêneros favoritos do usuário.
+
+##### Sobre as features disponíveis
+
+O link sugerido para acessar o dataset leva ao dataset chamado ml-20m e neste não há informações mais específicas sobre os usuários. Há um dataset menor, ml-100k, na mesma base que possui os dados de idade, gênero, profissão e endereço (zipcode) do usuário. Caso estas informações fossem utilizadas poderíamos encontrar filmes favoritos do usuário com um algoritmo, como o NearestNeighbors, para identificar filmes favoritos e utilizá-los como referência para filmes similares.
+
+Outra característica que poderia ser utilizada neste algoritmo seria o 'timestamp', pois filmes vistos por último e com boa avaliação podem ser uma sugestão melhor que filmes vistos há muito tempo com boa avaliação.
+
+Como o dataset ml-100k não foi indicado primariamente vamos assumir que não temos estes dados e utilizar a correlação de Pearson e entre o 'rating' e os gêneros para determinar os gêneros favoritos e utilizá-los para fazer a sugestão.
+
+Aqui foram usadas variáveis pouco significativas para classificar um filme. Com mais informações como o país de origem, duração, língua, protagonistas e avaliação de sites como Rotten Tomatoes e IMDB enriqueceríamos a capacidade de encontrar semelhanças entre os filmes. Estes dados podem ser encontrados com a própria base de dados do IMDB e o dataset 'links' contém o Id de cada filme para fazer esta busca.
+
+#### Métricas para ranqueamento e modelo escolhido
+
+Foi escolhido um modelo que considera um espaço abstrato contendo como datapoints os filmes. A semelhança entre os filmes é determinada pela proximidade dos datapoints neste espaço, chamada de similaridade na matemática. O algoritmo utilizado, NearestNeighbors, utilizou como características (features) dos datapoints o ano de lançamento, os gêneros e a avaliação média dos usuários.
+
+Poderíamos enriquecer muito as características dos filmes utilizando um pouco de Natural Language Processing para obter informações das palavras contidas nos datasets "tags", "genome_tags", "genome_scores" e também nos títulos dos filmes.
+
+Um sistema com avaliação do tipo "like" e "dislike" permitiria a construção de um modelo de classificação, que permitiria usar as métricas convencionais (accuracy, precision, F1, Recall e Confusion Matrix) ao invés de uma métrica criada especificamente para esse problema, o número de sucessos.
+
+Há diversas outras maneiras de realizar a recomendações, por exemplo, o sistema poderia ter como "target" prever a nota que o usuário daria para o filme e recomendar os filmes de acordo com as maiores avaliações previstas. A vantagem desse sistema é a fácil verificação de performance através de métricas como RMSE, além disso poderíamos separar o dataset em train set e test set para avalição entre outras coisas a generalização, ovefitting e underfitting.
+
+
+#### Avaliação do modelo
+
+O método escolhido dificultou a avaliação do modelo por não se encaixar nos padrões mais conhecidos, foi então estabelecida uma métrica qualitativa que conta quantas das recomendações estão entre os filmes favoritos de um usuário. Comparando os resultados obtidos com recomendações feitas ao acaso o sistema construído apresentou um número de sucessos 125 maior. Outro ponto que pode ter afetado o resultado das recomendações é o método escolhido para determinar os filmes favoritos do usuário, pois há grande chance de que todos os 10 filmes tenham recebido avaliação 5, assim o critério de desempate seria apenas a avaliação média do filme.
